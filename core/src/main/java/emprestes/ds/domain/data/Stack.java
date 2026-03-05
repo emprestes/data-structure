@@ -10,23 +10,44 @@ import java.util.Optional;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
+/**
+ * Linked-node stack implementation.
+ *
+ * @param <T> stored value type
+ */
 public class Stack<T> implements IStack<T> {
 
     private Node<T> head;
 
+    /**
+     * Returns the current top value as an optional.
+     *
+     * @return optional top value
+     */
     public Optional<T> getHead() {
         return ofNullable(head).map(Node::value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmpty() {
         return head == null;
     }
 
+    /**
+     * Indicates whether the stack has at least one element.
+     *
+     * @return {@code true} when not empty
+     */
     public boolean nonEmpty() {
         return !isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SafeVarargs
     public final IStack<T> push(T... values) {
@@ -37,6 +58,11 @@ public class Stack<T> implements IStack<T> {
         return this;
     }
 
+    /**
+     * Pushes a single non-null value to the stack top.
+     *
+     * @param value value to push
+     */
     private void push(T value) {
         head = nonNull(value)
                 ? ofNullable(head)
@@ -45,6 +71,9 @@ public class Stack<T> implements IStack<T> {
                 : head;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T pop() {
         var value = ofNullable(head).map(Node::value);
@@ -57,6 +86,9 @@ public class Stack<T> implements IStack<T> {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<T> popAll() {
         var all = new ArrayList<T>();
@@ -68,6 +100,9 @@ public class Stack<T> implements IStack<T> {
         return all;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int size() {
         return ofNullable(head).map(Node::count).orElse(0);

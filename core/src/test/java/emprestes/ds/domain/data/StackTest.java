@@ -1,7 +1,6 @@
 package emprestes.ds.domain.data;
 
 import emprestes.ds.domain.IStack;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

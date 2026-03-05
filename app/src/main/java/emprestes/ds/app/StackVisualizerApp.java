@@ -25,12 +25,20 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * JavaFX application that visualizes stack operations and their history.
+ */
 public class StackVisualizerApp extends Application {
 
+    /**
+     * Represents one rendered stack state after an operation.
+     *
+     * @param label operation label
+     * @param values stack values from top to bottom
+     */
     private record Snapshot(String label, List<String> values) {}
 
     private final IStack<String> stack = new Stack<>();
@@ -38,10 +46,20 @@ public class StackVisualizerApp extends Application {
     private final FlowPane historyPane = new FlowPane();
     private final Label statusLabel = new Label("Pronto");
 
+    /**
+     * Application entry point.
+     *
+     * @param args startup arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Initializes and shows the main application window.
+     *
+     * @param stage primary JavaFX stage
+     */
     @Override
     public void start(Stage stage) {
         stage.setTitle("Visualizador de Pilha");
@@ -60,6 +78,11 @@ public class StackVisualizerApp extends Application {
         stage.show();
     }
 
+    /**
+     * Builds the scrollable area that renders snapshot cards.
+     *
+     * @return history pane node
+     */
     private Node buildHistoryPane() {
         historyPane.setPadding(new Insets(12));
         historyPane.setHgap(16);
@@ -73,6 +96,11 @@ public class StackVisualizerApp extends Application {
         return scroll;
     }
 
+    /**
+     * Builds the side panel with stack operation controls.
+     *
+     * @return form panel
+     */
     private VBox buildFormPane() {
         var title = new Label("Operações");
         title.getStyleClass().add("panel-title");
@@ -124,6 +152,11 @@ public class StackVisualizerApp extends Application {
         return form;
     }
 
+    /**
+     * Builds the header section of the page.
+     *
+     * @return header container
+     */
     private HBox buildHeader() {
         var title = new Label("Manipulação da Pilha");
         title.setFont(Font.font("Work Sans", 26));
@@ -137,12 +170,20 @@ public class StackVisualizerApp extends Application {
         return container;
     }
 
+    /**
+     * Captures and stores a snapshot of the current stack state.
+     *
+     * @param label operation label associated with the snapshot
+     */
     private void captureSnapshot(String label) {
         var snapshot = new ArrayList<>(stack.toList());
         snapshots.add(new Snapshot(label, snapshot));
         renderHistory();
     }
 
+    /**
+     * Re-renders every snapshot card in the history pane.
+     */
     private void renderHistory() {
         historyPane.getChildren().clear();
 
@@ -152,6 +193,13 @@ public class StackVisualizerApp extends Application {
         }
     }
 
+    /**
+     * Builds one visual card for a stack snapshot.
+     *
+     * @param index snapshot sequence number
+     * @param snapshot snapshot data
+     * @return card component
+     */
     private VBox buildStateCard(int index, Snapshot snapshot) {
         var title = new Label("#" + index + " • " + snapshot.label());
         title.getStyleClass().add("card-title");
@@ -179,6 +227,13 @@ public class StackVisualizerApp extends Application {
         return card;
     }
 
+    /**
+     * Builds one stack block rectangle with text.
+     *
+     * @param value block text
+     * @param indexFromTop index used to vary color by depth
+     * @return block node
+     */
     private StackPane buildBlock(String value, int indexFromTop) {
         var height = 30;
         var rect = new Rectangle(120, height);
