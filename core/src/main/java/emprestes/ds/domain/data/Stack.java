@@ -1,6 +1,8 @@
 package emprestes.ds.domain.data;
 
 import emprestes.ds.domain.IStack;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +18,10 @@ import java.util.List;
  * @param <T> stored value type
  */
 public final class Stack<T> implements IStack<T> {
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     private static final class Node<T> {
         private final T value;
         private final Node<T> previous;
-
-        private Node(T value, Node<T> previous) {
-            this.value = value;
-            this.previous = previous;
-        }
     }
 
     private Node<T> head;

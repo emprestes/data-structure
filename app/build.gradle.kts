@@ -18,6 +18,8 @@ val platform = when {
 
 dependencies {
     implementation(project(":core"))
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
     listOf("base", "graphics", "controls").forEach { mod ->
         implementation("org.openjfx:javafx-$mod:$javafxVersion:$platform")

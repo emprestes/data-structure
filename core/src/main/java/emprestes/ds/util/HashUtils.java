@@ -1,17 +1,14 @@
 package emprestes.ds.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Objects;
 
 /**
  * Utility helpers for working with hash values.
  */
-public final class HashUtils {
-
-    /**
-     * Utility class constructor.
-     */
-    private HashUtils() {
-    }
+@UtilityClass
+public class HashUtils {
 
     /**
      * Converts {@link String#hashCode()} to an eight-digit hexadecimal value.
