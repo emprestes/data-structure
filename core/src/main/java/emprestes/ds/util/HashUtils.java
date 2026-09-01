@@ -14,14 +14,14 @@ public final class HashUtils {
     }
 
     /**
-     * Converte o {@link String#hashCode()} em uma representação hexadecimal com 8 dígitos.
+     * Converts {@link String#hashCode()} to an eight-digit hexadecimal value.
      *
-     * @param value texto de origem (não pode ser {@code null})
-     * @return hash em hexadecimal, zero‑padded, ex.: {@code "05e918d2"}
+     * @param value source text; must not be {@code null}
+     * @return zero-padded hexadecimal hash, for example {@code "05e918d2"}
      */
     public static String toHexHash(String value) {
         Objects.requireNonNull(value, "value must not be null");
         int hash = value.hashCode();
-        return String.format("%x", hash);
+        return String.format("%08x", hash);
     }
 }

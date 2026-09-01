@@ -22,9 +22,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,18 +32,18 @@ import static java.util.Objects.requireNonNull;
  */
 public class StackVisualizerApp extends Application {
 
-    /**
-     * Represents one rendered stack state after an operation.
-     *
-     * @param label operation label
-     * @param values stack values from top to bottom
-     */
-    private record Snapshot(String label, List<String> values) {}
-
-    private final IStack<String> stack = new Stack<>();
-    private final List<Snapshot> snapshots = new ArrayList<>();
+    private final StackHistory history;
     private final FlowPane historyPane = new FlowPane();
-    private final Label statusLabel = new Label("Pronto");
+    private final Label statusLabel = new Label("Ready");
+
+    /** Creates the production application composition. */
+    public StackVisualizerApp() {
+        this(new Stack<>());
+    }
+
+    StackVisualizerApp(IStack<String> stack) {
+        history = new StackHistory(stack, stack);
+    }
 
     /**
      * Application entry point.
@@ -62,7 +61,7 @@ public class StackVisualizerApp extends Application {
      */
     @Override
     public void start(Stage stage) {
-        stage.setTitle("Visualizador de Pilha");
+        stage.setTitle("Stack Visualizer");
 
         var root = new BorderPane();
         root.setPadding(new Insets(18));
@@ -70,7 +69,7 @@ public class StackVisualizerApp extends Application {
         root.setRight(buildFormPane());
         root.setTop(buildHeader());
 
-        captureSnapshot("Pilha vazia");
+        captureSnapshot("Empty stack");
 
         var scene = new Scene(root, 1180, 720);
         scene.getStylesheets().add(requireNonNull(getClass().getResource("/stack.css")).toExternalForm());
@@ -102,14 +101,14 @@ public class StackVisualizerApp extends Application {
      * @return form panel
      */
     private VBox buildFormPane() {
-        var title = new Label("Operações");
+        var title = new Label("Operations");
         title.getStyleClass().add("panel-title");
 
-        var instructions = new Label("Digite um valor e escolha Push ou Pop.\nUse vírgula para enviar múltiplos valores.");
+        var instructions = new Label("Enter a value and choose Push or Pop.\nUse commas to submit multiple values.");
         instructions.setWrapText(true);
 
         var valueField = new TextField();
-        valueField.setPromptText("valor ou lista: 1,2,3");
+        valueField.setPromptText("value or list: 1,2,3");
 
         var pushButton = new Button("Push");
         var popButton = new Button("Pop");
@@ -119,27 +118,21 @@ public class StackVisualizerApp extends Application {
         pushButton.setOnAction(e -> {
             var raw = valueField.getText().trim();
             if (raw.isEmpty()) {
-                statusLabel.setText("Nada para inserir");
+                statusLabel.setText("Nothing to push");
                 valueField.requestFocus();
                 return;
             }
-            var values = raw.split(",");
-            for (var v : values) {
-                var cleaned = v.trim();
-                if (!cleaned.isEmpty()) {
-                    stack.push(cleaned);
-                }
-            }
+            history.push(Arrays.asList(raw.split(",")), "Push " + raw);
             valueField.clear();
             valueField.requestFocus();
-            statusLabel.setText("Push realizado");
-            captureSnapshot("Push " + raw);
+            statusLabel.setText("Push completed");
+            renderHistory();
         });
 
         popButton.setOnAction(e -> {
-            var popped = stack.pop();
-            statusLabel.setText(popped == null ? "Pilha vazia" : "Pop: " + popped);
-            captureSnapshot("Pop");
+            var popped = history.pop("Pop");
+            statusLabel.setText(popped == null ? "Empty stack" : "Pop: " + popped);
+            renderHistory();
             valueField.requestFocus();
         });
 
@@ -158,10 +151,10 @@ public class StackVisualizerApp extends Application {
      * @return header container
      */
     private HBox buildHeader() {
-        var title = new Label("Manipulação da Pilha");
+        var title = new Label("Stack Operations");
         title.setFont(Font.font("Work Sans", 26));
 
-        var subtitle = new Label("Histórico completo de estados após cada operação.");
+        var subtitle = new Label("Complete state history after every operation.");
         subtitle.getStyleClass().add("muted");
 
         var box = new VBox(4, title, subtitle);
@@ -176,8 +169,7 @@ public class StackVisualizerApp extends Application {
      * @param label operation label associated with the snapshot
      */
     private void captureSnapshot(String label) {
-        var snapshot = new ArrayList<>(stack.toList());
-        snapshots.add(new Snapshot(label, snapshot));
+        history.capture(label);
         renderHistory();
     }
 
@@ -187,6 +179,7 @@ public class StackVisualizerApp extends Application {
     private void renderHistory() {
         historyPane.getChildren().clear();
 
+        var snapshots = history.snapshots();
         for (int i = 0; i < snapshots.size(); i++) {
             var snapshot = snapshots.get(i);
             historyPane.getChildren().add(buildStateCard(i + 1, snapshot));
@@ -200,7 +193,7 @@ public class StackVisualizerApp extends Application {
      * @param snapshot snapshot data
      * @return card component
      */
-    private VBox buildStateCard(int index, Snapshot snapshot) {
+    private VBox buildStateCard(int index, StackSnapshot snapshot) {
         var title = new Label("#" + index + " • " + snapshot.label());
         title.getStyleClass().add("card-title");
 
@@ -214,8 +207,8 @@ public class StackVisualizerApp extends Application {
             empty.getStyleClass().add("empty");
             stackBox.getChildren().add(empty);
         } else {
-            var reversed = new ArrayList<>(values);
-            Collections.reverse(reversed); // exibir de baixo para cima
+            var reversed = new java.util.ArrayList<>(values);
+            Collections.reverse(reversed);
             for (int i = 0; i < reversed.size(); i++) {
                 stackBox.getChildren().add(buildBlock(reversed.get(i), i));
             }

@@ -26,6 +26,7 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 javafx {
@@ -48,7 +49,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-// Garante module-path correto mesmo quando executado pelo IntelliJ via tarefa Gradle
+// Keeps the JavaFX module path correct when IntelliJ delegates execution to Gradle.
 tasks.named<JavaExec>("run") {
     val javafxJars = configurations.runtimeClasspath.get().filter { it.name.startsWith("javafx") }
     jvmArgs = listOf(
