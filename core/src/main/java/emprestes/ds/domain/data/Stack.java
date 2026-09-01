@@ -1,121 +1,99 @@
 package emprestes.ds.domain.data;
 
 import emprestes.ds.domain.IStack;
-import emprestes.ds.domain.model.Node;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static java.util.Objects.nonNull;
-import static java.util.Optional.ofNullable;
 
 /**
- * Linked-node stack implementation.
+ * Linked-node LIFO stack with encapsulated storage.
+ *
+ * <p>The node type is private so clients interact with stack behavior rather
+ * than navigating or mutating its representation. Push, pop, size, and
+ * emptiness checks are O(1). Creating a snapshot or removing all values is
+ * O(n).</p>
  *
  * @param <T> stored value type
  */
-public class Stack<T> implements IStack<T> {
+public final class Stack<T> implements IStack<T> {
+    private static final class Node<T> {
+        private final T value;
+        private final Node<T> previous;
+
+        private Node(T value, Node<T> previous) {
+            this.value = value;
+            this.previous = previous;
+        }
+    }
 
     private Node<T> head;
+    private int size;
 
-    /**
-     * Returns the current top value as an optional.
-     *
-     * @return optional top value
-     */
-    public Optional<T> getHead() {
-        return ofNullable(head).map(Node::value);
+    /** Creates an empty stack. */
+    public Stack() {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean isEmpty() {
-        return head == null;
+        return size == 0;
     }
 
-    /**
-     * Indicates whether the stack has at least one element.
-     *
-     * @return {@code true} when not empty
-     */
-    public boolean nonEmpty() {
-        return !isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} Null values are ignored. Complexity: O(k) for k values. */
     @Override
     @SafeVarargs
     public final IStack<T> push(T... values) {
-        for (var value : values) {
-            push(value);
+        if (values == null) {
+            return this;
         }
-
+        for (var value : values) {
+            if (value != null) {
+                head = new Node<>(value, head);
+                size++;
+            }
+        }
         return this;
     }
 
-    /**
-     * Pushes a single non-null value to the stack top.
-     *
-     * @param value value to push
-     */
-    private void push(T value) {
-        head = nonNull(value)
-                ? ofNullable(head)
-                  .map(h -> h.next(value))
-                  .orElseGet(() -> new Node<>(value))
-                : head;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} Complexity: O(1). */
     @Override
     public T pop() {
-        var value = ofNullable(head).map(Node::value);
-
-        if (value.isPresent()) {
-            head = head.previous();
-            return value.get();
+        if (head == null) {
+            return null;
         }
-
-        return null;
+        var value = head.value;
+        head = head.previous;
+        size--;
+        return value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} Complexity: O(n). */
     @Override
     public List<T> popAll() {
-        var all = new ArrayList<T>();
-
-        while (nonEmpty()) {
-            all.add(pop());
+        var values = new ArrayList<T>(size);
+        while (!isEmpty()) {
+            values.add(pop());
         }
+        return values;
+    }
 
-        return all;
+    /** {@inheritDoc} Complexity: O(1). */
+    @Override
+    public int size() {
+        return size;
     }
 
     /**
      * {@inheritDoc}
+     *
+     * <p>The traversal does not mutate or rebuild this stack. Complexity: O(n).</p>
      */
     @Override
-    public int size() {
-        return ofNullable(head).map(Node::count).orElse(0);
-    }
-
-    /**
-     * Returns a snapshot of the current stack from top to bottom without mutating it.
-     */
     public List<T> toList() {
-        var popped = popAll();
-        for (int i = popped.size() - 1; i >= 0; i--) {
-            push(popped.get(i));
+        var values = new ArrayList<T>(size);
+        for (var current = head; current != null; current = current.previous) {
+            values.add(current.value);
         }
-        return List.copyOf(popped);
+        return List.copyOf(values);
     }
 }
