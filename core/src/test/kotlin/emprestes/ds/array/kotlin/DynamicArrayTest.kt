@@ -1,4 +1,4 @@
-package emprestes.ds.kotlin.array
+package emprestes.ds.array.kotlin
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

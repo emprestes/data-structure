@@ -1,4 +1,4 @@
-package emprestes.ds.domain.data;
+package emprestes.ds.array.java;
 
 import java.util.Arrays;
 import java.util.List;
