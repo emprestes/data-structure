@@ -1,5 +1,7 @@
 package emprestes.ds.domain.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +16,8 @@ import java.util.zip.Inflater;
  * optional DEFLATE compression (applied only when it shrinks), and small prefix
  * tokens for common schemes.
  */
-public final class URLHelper {
+@UtilityClass
+public class URLHelper {
 
     private static final char[] BASE64_URL_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".toCharArray();
     private static final int[] BASE64_URL_REVERSE = new int[128];
@@ -26,12 +29,6 @@ public final class URLHelper {
         for (int i = 0; i < BASE64_URL_ALPHABET.length; i++) {
             BASE64_URL_REVERSE[BASE64_URL_ALPHABET[i]] = i;
         }
-    }
-
-    /**
-     * Utility class constructor.
-     */
-    private URLHelper() {
     }
 
     /**
