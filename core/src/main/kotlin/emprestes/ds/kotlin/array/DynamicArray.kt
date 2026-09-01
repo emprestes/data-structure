@@ -1,33 +1,32 @@
 package emprestes.ds.kotlin.array
 
 /**
- * Array redimensionável implementado sobre um bloco contíguo de referências.
+ * Resizable array implemented on top of a contiguous block of references.
  *
- * A estrutura separa dois conceitos que costumam ser confundidos:
- * [size] é a quantidade de elementos visíveis, enquanto [capacity] é o número
- * de posições já reservado no armazenamento interno. Quando uma inserção não
- * cabe, a capacidade dobra e os elementos são copiados para um novo bloco.
- * Por isso, acrescentar ao final custa O(1) amortizado, embora a operação que
- * efetivamente cresce o array custe O(n).
+ * The structure separates two concepts that are often confused: [size] is the
+ * number of visible elements, while [capacity] is the number of slots reserved
+ * in the internal storage. When an insertion does not fit, the capacity doubles
+ * and the elements are copied into a new block. Therefore, appending costs
+ * amortized O(1), although the operation that grows the array costs O(n).
  *
- * Esta implementação aceita valores nulos e não usa [MutableList] internamente,
- * para deixar explícita a mecânica da estrutura de dados.
+ * This implementation accepts null values and does not use [MutableList]
+ * internally, so the mechanics of the data structure remain explicit.
  *
- * @param E tipo dos elementos armazenados.
- * @property initialCapacity quantidade inicial de posições reservadas; deve ser positiva.
+ * @param E type of the stored elements.
+ * @property initialCapacity initial number of reserved slots; must be positive.
  */
 class DynamicArray<E>(initialCapacity: Int = DEFAULT_CAPACITY) : Iterable<E> {
     private var elements: Array<Any?>
 
-    /** Quantidade de elementos atualmente armazenados. */
+    /** Number of elements currently stored. */
     var size: Int = 0
         private set
 
-    /** Quantidade de elementos que cabe sem uma nova realocação. */
+    /** Number of elements that fit without another reallocation. */
     val capacity: Int
         get() = elements.size
 
-    /** Indica se a estrutura não contém elementos. */
+    /** Whether the structure contains no elements. */
     val isEmpty: Boolean
         get() = size == 0
 
@@ -37,9 +36,9 @@ class DynamicArray<E>(initialCapacity: Int = DEFAULT_CAPACITY) : Iterable<E> {
     }
 
     /**
-     * Acrescenta [element] ao final.
+     * Appends [element] to the end.
      *
-     * Complexidade: O(1) amortizado e O(n) no pior caso, quando há crescimento.
+     * Complexity: amortized O(1), and O(n) in the worst case when storage grows.
      */
     fun add(element: E) {
         ensureCapacity(size + 1)
@@ -47,10 +46,10 @@ class DynamicArray<E>(initialCapacity: Int = DEFAULT_CAPACITY) : Iterable<E> {
     }
 
     /**
-     * Insere [element] em [index], deslocando os sucessores uma posição à direita.
+     * Inserts [element] at [index], shifting successors one position to the right.
      *
-     * [index] pode ser igual a [size], caso em que a operação equivale a [add].
-     * Complexidade: O(n).
+     * [index] may equal [size], in which case this operation is equivalent to [add].
+     * Complexity: O(n).
      */
     fun add(index: Int, element: E) {
         checkPositionIndex(index)
@@ -60,13 +59,13 @@ class DynamicArray<E>(initialCapacity: Int = DEFAULT_CAPACITY) : Iterable<E> {
         size++
     }
 
-    /** Retorna o elemento em [index]. Complexidade: O(1). */
+    /** Returns the element at [index]. Complexity: O(1). */
     operator fun get(index: Int): E {
         checkElementIndex(index)
         return elementAt(index)
     }
 
-    /** Substitui e retorna o valor anterior em [index]. Complexidade: O(1). */
+    /** Replaces and returns the previous value at [index]. Complexity: O(1). */
     operator fun set(index: Int, element: E): E {
         checkElementIndex(index)
         val previous = elementAt(index)
@@ -75,9 +74,9 @@ class DynamicArray<E>(initialCapacity: Int = DEFAULT_CAPACITY) : Iterable<E> {
     }
 
     /**
-     * Remove e retorna o elemento em [index], fechando o espaço deixado.
+     * Removes and returns the element at [index], closing the gap left behind.
      *
-     * Complexidade: O(n), por causa do deslocamento dos sucessores.
+     * Complexity: O(n), because successors must be shifted.
      */
     fun removeAt(index: Int): E {
         checkElementIndex(index)
@@ -91,16 +90,16 @@ class DynamicArray<E>(initialCapacity: Int = DEFAULT_CAPACITY) : Iterable<E> {
         return removed
     }
 
-    /** Remove todos os elementos sem reduzir a capacidade reservada. Complexidade: O(n). */
+    /** Removes every element without shrinking reserved capacity. Complexity: O(n). */
     fun clear() {
         elements.fill(null, fromIndex = 0, toIndex = size)
         size = 0
     }
 
-    /** Cria uma lista somente leitura com os elementos atuais. Complexidade: O(n). */
+    /** Creates a read-only list with the current elements. Complexity: O(n). */
     fun toList(): List<E> = List(size) { elementAt(it) }
 
-    /** Itera na ordem dos índices, do zero até [size] - 1. */
+    /** Iterates in index order, from zero through [size] - 1. */
     override fun iterator(): Iterator<E> = object : Iterator<E> {
         private var cursor = 0
 

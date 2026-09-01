@@ -1,41 +1,41 @@
-# Array dinâmico em Kotlin
+# Dynamic Array in Kotlin
 
-Um array comum reserva um bloco de tamanho fixo. O array dinâmico mantém essa
-vantagem — acesso direto por índice — mas troca o bloco por outro maior quando
-fica cheio.
+A regular array reserves a fixed-size block. A dynamic array preserves its main
+advantage—direct access by index—but replaces the block with a larger one when
+it becomes full.
 
-## Modelo mental
+## Mental model
 
-Há duas medidas independentes:
+There are two independent measurements:
 
-- **tamanho (`size`)**: quantos elementos pertencem à coleção;
-- **capacidade (`capacity`)**: quantas posições o bloco atual comporta.
+- **size**: how many elements belong to the collection;
+- **capacity**: how many slots the current block can hold.
 
-Ao inserir em um array cheio, a implementação cria um bloco com o dobro da
-capacidade e copia os elementos. O crescimento geométrico evita copiar tudo a
-cada inserção.
+When inserting into a full array, the implementation creates a block with twice
+the capacity and copies the elements. Geometric growth avoids copying everything
+on every insertion.
 
 ```text
 size = 3, capacity = 4
 
-índice:       0      1      2      3
-armazenado: [ A ]  [ B ]  [ C ]  [   ]
+index:       0      1      2      3
+stored:    [ A ]  [ B ]  [ C ]  [   ]
 ```
 
-## Operações e complexidade
+## Operations and complexity
 
-| Operação | Tempo | Motivo |
+| Operation | Time | Reason |
 | --- | --- | --- |
-| consultar ou substituir por índice | O(1) | o endereço é calculado diretamente |
-| adicionar ao final | O(1) amortizado | a maioria das inserções não copia o bloco |
-| inserir ou remover no meio | O(n) | elementos precisam ser deslocados |
-| procurar por valor | O(n) | no pior caso, é preciso percorrer todos |
-| copiar para uma lista | O(n) | cada elemento entra no novo snapshot |
+| read or replace by index | O(1) | the address is calculated directly |
+| append | amortized O(1) | most insertions do not copy the block |
+| insert or remove in the middle | O(n) | elements must be shifted |
+| search by value | O(n) | every element may need to be visited |
+| copy to a list | O(n) | each element enters the new snapshot |
 
-O espaço usado é O(n). Logo após um crescimento, parte dele fica reservada mas
-ainda vazia; esse é o custo que compra inserções rápidas no final.
+Space usage is O(n). Immediately after growth, some slots are reserved but still
+empty; this is the cost paid for fast appends.
 
-## Exemplo
+## Example
 
 ```kotlin
 val names = DynamicArray<String>(initialCapacity = 2)
@@ -47,17 +47,17 @@ println(names[1])       // Grace
 println(names.toList()) // [Ada, Grace, Edsger]
 ```
 
-## Decisões didáticas
+## Teaching decisions
 
-- O armazenamento é `Array<Any?>`, pois a JVM não permite criar diretamente
-  um array de um tipo genérico apagado em tempo de execução.
-- `MutableList` não é usada internamente: delegar a ela esconderia justamente
-  a realocação e os deslocamentos que queremos estudar.
-- Valores nulos são aceitos. O `null` fora da faixa lógica não é observável e
-  também libera referências removidas para o coletor de lixo.
+- Storage is an `Array<Any?>` because the JVM cannot directly create an array of
+  a generic type that is erased at runtime.
+- `MutableList` is not used internally: delegating to it would hide the
+  reallocation and shifting behavior that this implementation teaches.
+- Null values are supported. A `null` outside the logical range is unobservable
+  and also releases removed references for garbage collection.
 
-## Onde está o código
+## Code locations
 
-- Implementação: `core/src/main/kotlin/emprestes/ds/kotlin/array/DynamicArray.kt`
-- Testes: `core/src/test/kotlin/emprestes/ds/kotlin/array/DynamicArrayTest.kt`
-- API HTML: execute `./gradlew :core:dokkaGeneratePublicationHtml`
+- Implementation: `core/src/main/kotlin/emprestes/ds/kotlin/array/DynamicArray.kt`
+- Tests: `core/src/test/kotlin/emprestes/ds/kotlin/array/DynamicArrayTest.kt`
+- HTML API documentation: run `./gradlew :core:dokkaGeneratePublicationHtml`
