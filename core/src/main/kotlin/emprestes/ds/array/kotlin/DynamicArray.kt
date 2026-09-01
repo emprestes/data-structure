@@ -1,4 +1,4 @@
-package emprestes.ds.kotlin.array
+package emprestes.ds.array.kotlin
 
 /**
  * Resizable array implemented on top of a contiguous block of references.

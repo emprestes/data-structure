@@ -1,4 +1,4 @@
-package emprestes.ds.domain;
+package emprestes.ds.linkedlist.java;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @param <T> stored element type
  */
-public interface LinkedList<T> {
+public interface LinkedList<T> extends Iterable<T> {
 
     /**
      * Inserts a value at the beginning.
@@ -26,6 +26,16 @@ public interface LinkedList<T> {
     LinkedList<T> addLast(T value);
 
     /**
+     * Inserts a value at a zero-based position.
+     *
+     * @param index insertion position from zero through {@link #size()}
+     * @param value value to insert
+     * @return current list instance
+     * @throws IndexOutOfBoundsException when the index is outside the insertion range
+     */
+    LinkedList<T> add(int index, T value);
+
+    /**
      * Removes and returns the first element.
      *
      * @return removed element, or {@code null} when empty
@@ -38,6 +48,15 @@ public interface LinkedList<T> {
      * @return removed element, or {@code null} when empty
      */
     T removeLast();
+
+    /**
+     * Removes and returns the element at a zero-based index.
+     *
+     * @param index position to remove
+     * @return removed value
+     * @throws IndexOutOfBoundsException when the index does not identify an element
+     */
+    T removeAt(int index);
 
     /**
      * Removes the first occurrence of the given value.
@@ -76,6 +95,9 @@ public interface LinkedList<T> {
      * @return {@code true} when empty
      */
     boolean isEmpty();
+
+    /** Removes every node from the list. */
+    void clear();
 
     /**
      * Returns the current list values in order.

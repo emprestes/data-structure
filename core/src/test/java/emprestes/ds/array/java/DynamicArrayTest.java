@@ -1,4 +1,4 @@
-package emprestes.ds.domain.data;
+package emprestes.ds.array.java;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
