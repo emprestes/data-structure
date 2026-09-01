@@ -56,8 +56,8 @@ stable nodes and frequent structural changes matter more than indexed access.
 
 | Language | Implementation | Tests | API documentation | Example |
 | --- | --- | --- | --- | --- |
-| Java | [`DynamicArray.java`](../../src/main/java/emprestes/ds/array/java/DynamicArray.java) | [`DynamicArrayTest.java`](../../src/test/java/emprestes/ds/array/java/DynamicArrayTest.java) | Run `./gradlew :core:javadoc` | [`Java example`](#java-example) |
-| Kotlin | [`DynamicArray.kt`](../../src/main/kotlin/emprestes/ds/array/kotlin/DynamicArray.kt) | [`DynamicArrayTest.kt`](../../src/test/kotlin/emprestes/ds/array/kotlin/DynamicArrayTest.kt) | Run `./gradlew :core:dokkaGeneratePublicationHtml` | [`Kotlin example`](#kotlin-example) |
+| Java | [`DynamicArray.java`](../src/main/java/emprestes/ds/array/java/DynamicArray.java) | [`DynamicArrayTest.java`](../src/test/java/emprestes/ds/array/java/DynamicArrayTest.java) | Run `./gradlew :core:javadoc` | [`Java example`](#java-example) |
+| Kotlin | [`DynamicArray.kt`](../src/main/kotlin/emprestes/ds/array/kotlin/DynamicArray.kt) | [`DynamicArrayTest.kt`](../src/test/kotlin/emprestes/ds/array/kotlin/DynamicArrayTest.kt) | Run `./gradlew :core:dokkaGeneratePublicationHtml` | [`Kotlin example`](#kotlin-example) |
 
 ### Java example
 

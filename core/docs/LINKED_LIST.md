@@ -86,8 +86,8 @@ the same mechanics through APIs that follow each language's conventions.
 
 | Language | Implementation | Tests | API documentation | Example |
 | --- | --- | --- | --- | --- |
-| Java | [`SinglyLinkedList.java`](../../src/main/java/emprestes/ds/linkedlist/java/SinglyLinkedList.java) | [`SinglyLinkedListTest.java`](../../src/test/java/emprestes/ds/linkedlist/java/SinglyLinkedListTest.java) | Run `./gradlew :core:javadoc` | [`Java example`](#java-example) |
-| Kotlin | [`SinglyLinkedList.kt`](../../src/main/kotlin/emprestes/ds/linkedlist/kotlin/SinglyLinkedList.kt) | [`SinglyLinkedListTest.kt`](../../src/test/kotlin/emprestes/ds/linkedlist/kotlin/SinglyLinkedListTest.kt) | Run `./gradlew :core:dokkaGeneratePublicationHtml` | [`Kotlin example`](#kotlin-example) |
+| Java | [`SinglyLinkedList.java`](../src/main/java/emprestes/ds/linkedlist/java/SinglyLinkedList.java) | [`SinglyLinkedListTest.java`](../src/test/java/emprestes/ds/linkedlist/java/SinglyLinkedListTest.java) | Run `./gradlew :core:javadoc` | [`Java example`](#java-example) |
+| Kotlin | [`SinglyLinkedList.kt`](../src/main/kotlin/emprestes/ds/linkedlist/kotlin/SinglyLinkedList.kt) | [`SinglyLinkedListTest.kt`](../src/test/kotlin/emprestes/ds/linkedlist/kotlin/SinglyLinkedListTest.kt) | Run `./gradlew :core:dokkaGeneratePublicationHtml` | [`Kotlin example`](#kotlin-example) |
 
 ### Java example
 
